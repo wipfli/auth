@@ -20,15 +20,18 @@ app.post('/login', (req, res) => {
 
     if (!user) {
         res.sendStatus(403)
+        return
     }
 
     bcrypt.compare(password, user.hash, (err, result) => {
         if (result) {
             const token = jwt.sign({ username: user.username,  role: user.role }, settings.secret)
             res.json({ token })
+            return
         }
         else {
             res.sendStatus(403)
+            return
         }
     })
 })
@@ -36,5 +39,6 @@ app.post('/login', (req, res) => {
 app.post('/hash', (req, res) => {
     bcrypt.hash(req.body.password, settings.saltRounds, (err, hash) => {
         res.json({ hash })
+        return
     })
 })
